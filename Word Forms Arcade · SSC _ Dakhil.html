@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Word Forms Arcade · SSC / Dakhil</title>
+<style>
+:root{--bg:#EAF4F1;--ink:#0B3B38;--card:#fff;--line:#BFDCD6;--teal:#0F766E;--amber:#F5B83D;--ok:#15803D;--okbg:#DCFCE7;--no:#B91C1C;--nobg:#FEE2E2;--mut:#4B635F;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1F1E;--ink:#E6F4F1;--card:#123432;--line:#25524E;--teal:#2DD4BF;--okbg:#14532D;--nobg:#7F1D1D;--ok:#86EFAC;--no:#FCA5A5;--mut:#9FC4BE}}
+:root[data-theme="dark"]{--bg:#0B1F1E;--ink:#E6F4F1;--card:#123432;--line:#25524E;--teal:#2DD4BF;--okbg:#14532D;--nobg:#7F1D1D;--ok:#86EFAC;--no:#FCA5A5;--mut:#9FC4BE}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.bn{font-family:"Nirmala UI","Noto Sans Bengali","Kohinoor Bangla",sans-serif}
+main{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+h1{font:700 30px/1.15 Georgia,"Times New Roman",serif;margin:6px 0 2px}
+.sub{margin:0 0 16px;color:var(--mut)}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tabs button{flex:1;padding:10px 6px;border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;font:600 15px inherit;cursor:pointer}
+.tabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.bar{display:flex;gap:10px;margin-bottom:12px}
+.bar div{flex:1;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:13px;color:var(--mut)}
+.bar b{display:block;font-size:22px;color:var(--ink);line-height:1.2}
+#stage{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 18px;min-height:340px}
+.how{font-size:14px;color:var(--mut);margin:0 0 12px}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--amber);transition:width .3s}
+.cnt{font-size:14px;color:var(--mut);margin:10px 0}
+.sent{font:400 23px/1.45 Georgia,serif;margin:6px 0 18px}
+.sent.bn{font-size:30px;text-align:center;margin:26px 0}
+.gap{display:inline-block;min-width:110px;border-bottom:3px solid var(--amber);text-align:center;font-weight:700;color:var(--teal)}
+.opts{display:grid;gap:10px}
+.opts button{padding:13px 14px;text-align:left;font:600 18px inherit;border:2px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;cursor:pointer}
+.opts button:hover:not(:disabled){border-color:var(--teal)}
+.opts button.ok,.card.ok{background:var(--okbg);border-color:var(--ok);color:var(--ink)}
+.opts button.no{background:var(--nobg);border-color:var(--no)}
+.fb{min-height:56px;margin-top:14px}
+.next,.big{margin-left:12px;padding:8px 16px;border:0;border-radius:8px;background:var(--amber);color:#3B2A00;font:700 15px inherit;cursor:pointer}
+.big{margin:18px 0 0;padding:12px 22px;font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.card{min-height:84px;padding:6px;border:2px solid var(--line);border-radius:10px;background:var(--teal);color:#fff;font:700 16px inherit;cursor:pointer}
+.card.up{background:var(--bg);color:var(--ink)}
+.end{text-align:center;padding:24px 0}
+.end .n{font:700 72px/1 Georgia,serif;color:var(--teal)}
+button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head>
+<body><main>
+<h1>Word Forms Arcade</h1>
+<p class="sub bn">সঠিক শব্দ বেছে নাও, পয়েন্ট জেতো!</p>
+<div class="tabs" role="tablist">
+<button data-m="gap" class="on">Gap Hunter</button><button data-m="rush">Meaning Rush</button><button data-m="pair">Memory Pairs</button></div>
+<div class="bar"><div>Score<b id="sc">0</b></div><div>Streak<b id="st">0</b></div><div>Best<b id="bs">0</b></div></div>
+<section id="stage"></section>
+</main>
+<script>
+const D=`Addiction means strong ___ for any harmful thing.|attraction|attractive|আকর্ষণ
+Some drugs are taken for ___ and stimulating effect.|intoxication|intoxicate|নেশা / মাদকতা
+We should save youth from this ___ bad habit.|harmful|harm|ক্ষতিকর
+Newspaper plays an important role in modern ___.|civilization|civilize|সভ্যতা
+A newspaper helps him ___ his general knowledge.|enrich|rich|সমৃদ্ধ করা
+Smoking is a ___ habit.|dangerous|danger|বিপজ্জনক
+Smoking causes many ___ diseases.|incurable|curable|নিরাময় অযোগ্য
+Many people are ___ of the harmful effect of smoking.|unaware|aware|অসচেতন
+We are highly ___ to our freedom fighters.|grateful|gratitude|কৃতজ্ঞ
+For their ___ deeds in 1971, we got freedom.|heroic|hero|বীরত্বপূর্ণ
+Many of them now lead an ___ life.|inhuman|human|অমানবিক
+He joined the war ___.|willingly|willing|স্বেচ্ছায়
+If anyone becomes ___ to good manners, he can't misbehave.|accustomed|custom|অভ্যস্ত
+It is every parent's ___ to teach moral lessons.|responsibility|responsible|দায়িত্ব
+Every form of exercise is not ___ for all.|suitable|suit|উপযোগী
+Walking is ___ to health.|beneficial|benefit|উপকারী
+Walking ___ our mind.|refreshes|fresh|সতেজ করে
+Children become ___ and lead an unhealthy life.|bulky|bulk|স্থূলকায়
+Poor diet causes ___ of vitamins.|deficiency|deficient|ঘাটতি
+Our freedom fighters showed unique ___.|heroism|heroic|বীরত্ব
+It is an achievement which is ___.|immeasurable|measure|পরিমাপাতীত
+The ___ has changed Digital Bangladesh to Smart Bangladesh.|government|govern|সরকার
+Smart Bangladesh is ___ taking shape.|rapidly|rapid|দ্রুতগতিতে
+The ___ beauty of a man is not his real beauty.|outward|outer|বাহ্যিক
+Every man has certain ___ qualities.|inborn|born|সহজাত
+We remain ___ about mental development.|careless|care|উদাসীন
+Junk foods look ___ and appetizing.|charming|charm|আকর্ষণীয়
+Flowers are the symbol of love and ___.|purity|pure|পবিত্রতা
+The Japanese are famous for rose ___.|cultivation|cultivate|চাষাবাদ
+An early riser enjoys the ___ of morning air.|freshness|fresh|সতেজতা
+He need not go to a ___ often.|physician|physic|চিকিৎসক
+You need confidence to ___ the problems of life.|overcome|overcame|কাটিয়ে ওঠা
+Remember that ___ is the pillar of success.|failure|fail|ব্যর্থতা
+If we cut trees ___, there will be imbalance.|indiscriminately|indiscriminate|নির্বিচারে
+Animals are ___ beings.|harmless|harm|নিরীহ
+Load-shedding is not ___.|desirable|desire|বাঞ্ছনীয়
+It makes our life ___ and boring.|intolerable|tolerate|অসহনীয়
+They feel ___ to work for the poor.|discomfort|comfort|অস্বস্তি
+Our country is densely ___.|populated|population|জনবহুল
+Persevering people always become ___.|successful|success|সফল
+Those who do not persevere become ___.|unsuccessful|successful|অসফল
+Our book fair is always ___.|crowded|crowd|জনাকীর্ণ
+This facility is ___ outside a book fair.|unavailable|available|অপ্রাপ্য
+Everybody knows that ___ is harmful.|overwork|overworked|অতিরিক্ত পরিশ্রম
+King Solomon was ___ for his wisdom.|famous|fame|বিখ্যাত
+He was blessed with ___ knowledge.|extraordinary|ordinary|অসাধারণ
+Accidents occur due to ___ of traffic rules.|violation|violate|লঙ্ঘন
+These vehicles endanger the ___ of passengers.|safety|safe|নিরাপত্তা
+Education provides an ___ awareness.|enlightened|light|আলোকিত
+We should read books on ___ topics.|various|vary|বিভিন্ন
+Books introduce us to ___ knowledge.|unlimited|limited|অসীম
+Education helps us perform duties ___.|properly|proper|সঠিকভাবে`.split('\n').map(l=>{const[s,a,d,b]=l.split('|');return{s,a,d,b}});
+const $=q=>document.querySelector(q),stage=$('#stage');
+const sh=a=>a.map(x=>[Math.random(),x]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const pick=(q,n)=>sh(D.filter(x=>x.a!==q.a)).slice(0,n).map(x=>x.a);
+let best=0,mode='gap',G,R,M;
+try{best=+localStorage.getItem('wfa-best')||0}catch(e){}
+function stats(sc,st){$('#sc').textContent=sc;$('#st').textContent=st;$('#bs').textContent=best}
+function finish(score,msg){
+  if(score>best){best=score;try{localStorage.setItem('wfa-best',best)}catch(e){}}
+  stats(score,0);
+  stage.innerHTML=`<div class="end"><div class="n">${score}</div><p>${msg}</p><p class="bn">আবার খেললে আরও ভালো হবে!</p><button class="big" onclick="start()">Play again</button></div>`}
+function start(){clearInterval(R&&R.iv);({gap:gapStart,rush:rushStart,pair:pairStart})[mode]()}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.m;start()});
+
+/* Gap Hunter */
+function gapStart(){G={q:sh(D).slice(0,10),i:0,score:0,streak:0,done:false};gapShow()}
+function gapShow(){
+  if(G.i>=10)return finish(G.score,G.score>=120?'Excellent! You know your word forms.':G.score>=70?'Good work. Keep practising.':'Keep going. Read the notes and try again.');
+  const q=G.q[G.i],opts=sh([q.a,q.d,...pick(q,2)]);
+  stage.innerHTML=`<p class="how">Choose the right form to complete the sentence.</p><div class="prog"><i style="width:${G.i*10}%"></i></div><p class="cnt">Question ${G.i+1} of 10</p>
+  <p class="sent">${q.s.replace('___','<span class="gap" id="gap">&nbsp;</span>')}</p>
+  <div class="opts">${opts.map(o=>`<button onclick="gapPick(this,'${o}')">${o}</button>`).join('')}</div><div class="fb" id="fb"></div>`;
+  stats(G.score,G.streak)}
+function gapPick(btn,o){
+  if(G.done)return;G.done=true;const q=G.q[G.i],ok=o===q.a;
+  document.querySelectorAll('.opts button').forEach(b=>{b.disabled=true;if(b.textContent===q.a)b.classList.add('ok')});
+  if(ok){G.streak++;G.score+=10+Math.min(G.streak-1,5)*2}else{btn.classList.add('no');G.streak=0}
+  $('#gap').textContent=q.a;
+  $('#fb').innerHTML=`${ok?'Correct!':'Not quite.'} <b>${q.a}</b> = <span class="bn">${q.b}</span> <button class="next" onclick="G.done=false;G.i++;gapShow()">${G.i>=9?'Finish':'Next'}</button>`;
+  stats(G.score,G.streak)}
+
+/* Meaning Rush */
+function rushStart(){R={t:60,score:0};rushQ();R.iv=setInterval(()=>{R.t--;const e=$('#tm');if(e)e.textContent=R.t;if(R.t<=0)rushEnd()},1000)}
+function rushEnd(){clearInterval(R.iv);finish(R.score,`You matched ${R.score} words in 60 seconds.`)}
+function rushQ(){
+  const q=D[Math.random()*D.length|0],opts=sh([q.a,...pick(q,3)]);
+  stage.innerHTML=`<p class="how">Pick the English word for the Bangla meaning. A wrong answer costs 3 seconds.</p><p class="cnt">Time left: <b id="tm">${R.t}</b> s</p>
+  <p class="sent bn">${q.b}</p><div class="opts">${opts.map(o=>`<button onclick="rushPick('${o}','${q.a}')">${o}</button>`).join('')}</div>`;
+  stats(R.score,0)}
+function rushPick(o,a){if(o===a)R.score++;else R.t-=3;if(R.t<=0)return rushEnd();rushQ()}
+
+/* Memory Pairs */
+function pairStart(){
+  const w=sh(D).slice(0,6);
+  M={c:sh(w.flatMap(x=>[{k:x.a,t:x.a},{k:x.a,t:x.b,bn:1}])),o:[],found:0,moves:0,lock:false};pairShow()}
+function pairShow(){
+  stage.innerHTML=`<p class="how">Flip two cards. Match each English word with its Bangla meaning.</p><p class="cnt">Moves: ${M.moves} &nbsp; Pairs: ${M.found} of 6</p>
+  <div class="grid">${M.c.map((c,i)=>`<button class="card${c.f?' up ok':M.o.includes(i)?' up':''}${c.bn?' bn':''}" onclick="flip(${i})">${c.f||M.o.includes(i)?c.t:'?'}</button>`).join('')}</div>`;
+  stats(Math.max(0,120-M.moves*8),0)}
+function flip(i){
+  if(M.lock||M.c[i].f||M.o.includes(i))return;
+  M.o.push(i);pairShow();
+  if(M.o.length<2)return;
+  M.moves++;const[a,b]=M.o;
+  if(M.c[a].k===M.c[b].k){M.c[a].f=M.c[b].f=1;M.found++;M.o=[];pairShow();if(M.found===6)setTimeout(()=>finish(Math.max(10,120-M.moves*8),`Done in ${M.moves} moves.`),700)}
+  else{M.lock=true;setTimeout(()=>{M.o=[];M.lock=false;pairShow()},900)}}
+start();
+</script></body></html>
